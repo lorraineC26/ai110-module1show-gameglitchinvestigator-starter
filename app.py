@@ -71,20 +71,33 @@ raw_guess = st.text_input(
     key=f"guess_input_{difficulty}"
 )
 
+def on_new_game():
+    """Callback for New Game button - executes before widget rendering"""
+    # Reset game state
+    st.session_state.attempts = 0
+    st.session_state.score = 0
+    st.session_state.history = []
+    st.session_state.status = "playing"
+
+    # Generate secret with correct range for selected difficulty
+    new_low, new_high = get_range_for_difficulty(difficulty)
+    st.session_state.secret = random.randint(new_low, new_high)
+
+    # Clear the input field (must be done in callback before widget creation)
+    input_key = f"guess_input_{difficulty}"
+    st.session_state[input_key] = ""
+
+    # Clear last message/outcome
+    st.session_state.last_message = None
+    st.session_state.last_outcome = None
+
 col1, col2, col3 = st.columns(3)
 with col1:
     submit = st.button("Submit Guess 🚀")
 with col2:
-    new_game = st.button("New Game 🔁")
+    new_game = st.button("New Game 🔁", on_click=on_new_game)
 with col3:
     show_hint = st.checkbox("Show hint", value=True, key="show_hint")
-
-# FIXME: Logic breaks here
-if new_game:
-    st.session_state.attempts = 0
-    st.session_state.secret = random.randint(1, 100)
-    st.success("New game started.")
-    st.rerun()
 
 if st.session_state.status != "playing":
     if st.session_state.status == "won":
