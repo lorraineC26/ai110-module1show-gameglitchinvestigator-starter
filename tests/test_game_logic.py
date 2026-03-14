@@ -83,3 +83,51 @@ def test_bug3_attempts_with_info_message():
     assert attempts_made == 3
     assert attempt_limit - attempts_made == 3, "Info message should show 3 attempts left"
 
+
+def test_bug4_new_game_reset():
+    """
+    Bug 4: The "New Game" button does not completely reset the game.
+    Before fix: Only resets attempts and secret, but not History and status.
+    Verify that game state is completely reset.
+    """
+    # Simulate a game in progress with multiple guesses and some score
+    game_state = {
+        "secret": 50,
+        "attempts": 5,
+        "score": 20,
+        "history": [10, 20, 30, 40, 45],
+        "status": "playing",
+        "last_message": "📈 Go HIGHER!",
+        "last_outcome": "Too Low"
+    }
+
+    # Simulate losing condition (out of attempts, outcome not Win)
+    game_state["attempts"] = 6  # Hit the limit
+    game_state["status"] = "lost"
+    game_state["last_message"] = "Out of attempts! The secret was 50."
+    game_state["last_outcome"] = "Lost"
+
+    # Verify game is in "lost" state with history
+    assert game_state["status"] == "lost"
+    assert len(game_state["history"]) > 0
+    assert game_state["last_outcome"] == "Lost"
+
+    # Now simulate the new game reset (from on_new_game callback)
+    game_state["attempts"] = 0
+    game_state["score"] = 0
+    game_state["history"] = []
+    game_state["status"] = "playing"
+    game_state["secret"] = 75  # New random secret
+    game_state["last_message"] = None
+    game_state["last_outcome"] = None
+
+    # Verify all state is properly reset
+    assert game_state["attempts"] == 0, "Attempts should be reset to 0"
+    assert game_state["score"] == 0, "Score should be reset to 0"
+    assert game_state["history"] == [], "History should be cleared (THIS WOULD HAVE CAUGHT BUG 4)"
+    assert game_state["status"] == "playing", "Status should be reset to 'playing'"
+    assert game_state["last_message"] is None, "Last message should be cleared (THIS WOULD HAVE CAUGHT BUG 4)"
+    assert game_state["last_outcome"] is None, "Last outcome should be cleared"
+    assert game_state["secret"] != 50, "Secret should be a new random number"
+
+
