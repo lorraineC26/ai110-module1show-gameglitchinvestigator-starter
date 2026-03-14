@@ -16,7 +16,8 @@ difficulty = st.sidebar.selectbox(
     index=1,
 )
 
-# FIX: increase the attempts for Easy, decrease for Normal. The attempts num are suggested by Gemini based on diff levels
+# FIX: increase the attempts for Easy, decrease for Normal. 
+# The attempts num are suggested by Gemini based on diff levels
 attempt_limit_map = {
     "Easy": 8,
     "Normal": 6,
@@ -32,7 +33,7 @@ st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
-# FIX: change the attempt from 1 to 0 by asking claude code how to make the initial attempt match with the actual
+# FIX: change the attempt from 1 to 0 by asking claude code how to make the initial attempt sync with the actual
 if "attempts" not in st.session_state:
     st.session_state.attempts = 0
 

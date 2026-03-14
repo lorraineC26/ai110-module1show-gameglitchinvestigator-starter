@@ -1,6 +1,8 @@
 # FIX: Refactored logic into logic_utils.py using claude code
 def get_range_for_difficulty(difficulty: str):
     """Return (low, high) inclusive range for a given difficulty."""
+    # FIX: decrease the range for Normal and increase for Hard. 
+    # The new ranges are suggested by Gemini based on diff levels
     if difficulty == "Easy":
         return 1, 20
     if difficulty == "Normal":
@@ -45,6 +47,7 @@ def check_guess(guess, secret):
         return "Win", "🎉 Correct!"
 
     try:
+        # FIX: Switched Go Lower and Higher using Copilot to locate the place
         if guess > secret:
             return "Too High", "📉 Go LOWER!"
         else:
