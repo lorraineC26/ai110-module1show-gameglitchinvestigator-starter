@@ -11,14 +11,32 @@ def parse_guess(raw: str):
     """
     raise NotImplementedError("Refactor this function from app.py into logic_utils.py")
 
-
+# FIX: Refactored logic into logic_utils.py using claude code
 def check_guess(guess, secret):
     """
     Compare guess to secret and return (outcome, message).
 
-    outcome examples: "Win", "Too High", "Too Low"
+    outcome examples: "Win", "Too High", "Too Low", "Error"
     """
-    raise NotImplementedError("Refactor this function from app.py into logic_utils.py")
+    if guess == secret:
+        return "Win", "🎉 Correct!"
+
+    try:
+        if guess > secret:
+            return "Too High", "📉 Go LOWER!"
+        else:
+            return "Too Low", "📈 Go HIGHER!"
+    except TypeError:
+        # Handle type mismatch by converting both to int for comparison
+        try:
+            guess_int = int(guess) if isinstance(guess, str) else guess
+            secret_int = int(secret) if isinstance(secret, str) else secret
+            if guess_int > secret_int:
+                return "Too High", "📉 Go LOWER!"
+            else:
+                return "Too Low", "📈 Go HIGHER!"
+        except (ValueError, TypeError):
+            return "Error", "❌ Comparison failed"
 
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
