@@ -46,6 +46,12 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "last_message" not in st.session_state:
+    st.session_state.last_message = None
+
+if "last_outcome" not in st.session_state:
+    st.session_state.last_outcome = None
+
 st.subheader("Make a guess")
 
 st.info(
@@ -71,7 +77,7 @@ with col1:
 with col2:
     new_game = st.button("New Game 🔁")
 with col3:
-    show_hint = st.checkbox("Show hint", value=True)
+    show_hint = st.checkbox("Show hint", value=True, key="show_hint")
 
 # FIXME: Logic breaks here
 if new_game:
@@ -104,8 +110,9 @@ if submit:
 
         outcome, message = check_guess(guess_int, secret)
 
-        if show_hint:
-            st.warning(message)
+        # Store in session state to display after rerun
+        st.session_state.last_message = message if show_hint else None
+        st.session_state.last_outcome = outcome
 
         st.session_state.score = update_score(
             current_score=st.session_state.score,
@@ -114,24 +121,34 @@ if submit:
         )
 
         if outcome == "Win":
-            st.balloons()
             st.session_state.status = "won"
-            st.success(
-                f"You won! The secret was {st.session_state.secret}. "
-                f"Final score: {st.session_state.score}"
-            )
-        else:
-            if st.session_state.attempts >= attempt_limit:
-                st.session_state.status = "lost"
-                st.error(
-                    f"Out of attempts! "
-                    f"The secret was {st.session_state.secret}. "
-                    f"Score: {st.session_state.score}"
-                )
+
+        if st.session_state.attempts >= attempt_limit and outcome != "Win":
+            st.session_state.status = "lost"
+
         # FIX: force "Attempts left" msg rerun after the state is updated
         # --> all displays reflect the updated values.
         # using claude code to find the root cause and solution
         st.rerun()
+
+# Display messages after rerun has updated state
+if st.session_state.last_message is not None:
+    st.warning(st.session_state.last_message)
+    st.session_state.last_message = None
+
+if st.session_state.last_outcome == "Win":
+    st.balloons()
+    st.success(
+        f"You won! The secret was {st.session_state.secret}. "
+        f"Final score: {st.session_state.score}"
+    )
+elif st.session_state.last_outcome and st.session_state.status == "lost":
+    st.error(
+        f"Out of attempts! "
+        f"The secret was {st.session_state.secret}. "
+        f"Score: {st.session_state.score}"
+    )
+    st.session_state.last_outcome = None
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
