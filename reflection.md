@@ -11,7 +11,7 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 ---
 - Bug 1 (FIXED): The hints were backwards. When the player guessed a number that was too low, the app said "Too high!" and vice versa.
 - Bug 2 (FIXED): The initial attempts on the main page does not match the attempts on the sidebar. The main page show one less attempt than the sidebar on the first load.
-- Bug 3 (FIXED): The attempts on the main page does not update correctly. It shows 1 attempt left and "out of attempts" at the same time. It should be the issue with the submit button.
+- Bug 3 (FIXED): The attempts on the main page does not update correctly. It shows 1 attempt left and "out of attempts" at the same time. In addition, the History is not updating correctly. It should be the issue with the submit button.
 - Bug 4: The "New Game" button does not completely reset the game. When I click it, it only resets the attempts and the secret number, but not the History and the message "Game over. Start a new game to try again".
 - Bug 5 (FIXED): The difficulty levels for "Normal" and "Hard" do not work. While the Hard mode has the fewest attempts, the range (1 to 50) is smaller. The ideal difficulty levels should be: Easy (1-20, 8 attempts), Normal (1-50, 6 attempts), Hard (1-100, 5 attempts).
 
@@ -22,6 +22,9 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
 
 ---
+- **AI tools used:** Gemini, GitHub Copilot, and Claude Code.
+- **Correct AI suggestion:** I asked Claude Code to help me fix the issue with attempts not updating correctly (Bug 3). It suggested that the issue might be with the submit button and Streamlit state management. The info message displays before the submit handler runs, so it does not reflect the updated attempts. I verified the result by implementing the suggested fix and testing the game multiple times, confirming that the attempts now update correctly after each submission.
+- **Misleading AI suggestion:** I asked Claude Code to refactor the `check_guess` function into `logic_utils.py`and ensure the logic is correct. It suggested to remove the `try-except` block that handles non-integer inputs, which is necessary to prevent crashing when input is not a valid integer. I verified the issue by inputting strings like "ppp". There were no error messages, so users would just be trapped in a loop without feedback. I had to re-add the try-except block to handle invalid inputs properly.
 
 ## 3. Debugging and testing your fixes
 
