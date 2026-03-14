@@ -99,11 +99,31 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True, key="show_hint")
 
+# Display messages from previous guess BEFORE status check
+if st.session_state.last_message is not None:
+    st.warning(st.session_state.last_message)
+    st.session_state.last_message = None
+
+if st.session_state.last_outcome == "Win":
+    st.balloons()
+    st.success(
+        f"You won! The secret was {st.session_state.secret}. "
+        f"Final score: {st.session_state.score}"
+    )
+elif st.session_state.last_outcome and st.session_state.status == "lost":
+    st.error(
+        f"Out of attempts! "
+        f"The secret was {st.session_state.secret}. "
+        f"Score: {st.session_state.score}"
+    )
+    st.session_state.last_outcome = None
+
+# Check game status and stop if not playing
 if st.session_state.status != "playing":
     if st.session_state.status == "won":
-        st.success("You already won. Start a new game to play again.")
+        st.info("Start a new game to play again.")
     else:
-        st.error("Game over. Start a new game to try again.")
+        st.info("Start a new game to try again.")
     st.stop()
 
 if submit:
@@ -143,25 +163,6 @@ if submit:
         # --> all displays reflect the updated values.
         # using claude code to find the root cause and solution
         st.rerun()
-
-# Display messages after rerun has updated state
-if st.session_state.last_message is not None:
-    st.warning(st.session_state.last_message)
-    st.session_state.last_message = None
-
-if st.session_state.last_outcome == "Win":
-    st.balloons()
-    st.success(
-        f"You won! The secret was {st.session_state.secret}. "
-        f"Final score: {st.session_state.score}"
-    )
-elif st.session_state.last_outcome and st.session_state.status == "lost":
-    st.error(
-        f"Out of attempts! "
-        f"The secret was {st.session_state.secret}. "
-        f"Score: {st.session_state.score}"
-    )
-    st.session_state.last_outcome = None
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
