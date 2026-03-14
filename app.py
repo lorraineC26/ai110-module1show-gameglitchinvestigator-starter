@@ -2,6 +2,7 @@ import random
 import streamlit as st
 
 def get_range_for_difficulty(difficulty: str):
+    # FIXME: Logic breaks here
     if difficulty == "Easy":
         return 1, 20
     if difficulty == "Normal":
@@ -34,6 +35,7 @@ def check_guess(guess, secret):
         return "Win", "🎉 Correct!"
 
     try:
+        # FIXME: Logic breaks here
         if guess > secret:
             return "Too High", "📈 Go HIGHER!"
         else:
@@ -77,6 +79,7 @@ difficulty = st.sidebar.selectbox(
     index=1,
 )
 
+# FIXME: Logic breaks here
 attempt_limit_map = {
     "Easy": 6,
     "Normal": 8,
@@ -108,6 +111,7 @@ st.subheader("Make a guess")
 
 st.info(
     f"Guess a number between 1 and 100. "
+    # FIXME: Logic breaks here
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
 )
 
@@ -131,6 +135,7 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
+# FIXME: Logic breaks here
 if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(1, 100)

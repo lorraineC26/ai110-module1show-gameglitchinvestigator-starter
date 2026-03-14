@@ -12,7 +12,8 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - Bug 1: The hints were backwards. When the player guessed a number that was too low, the app said "Too high!" and vice versa.
 - Bug 2: The initial attempts on the main page does not match the attempts on the sidebar. The main page show one less attempt than the sidebar.
 - Bug 3: The attempts on the main page does not update correctly. It shows 1 attempt left and "out of attempts" at the same time.
-- Bug 4: The "New Game" button does not reset the game. When I click it, the game does not start over and the secret number does not change.
+- Bug 4: The "New Game" button does not completely reset the game. When I click it, it only resets the attempts and the secret number, but not the History and the message "Game over. Start a new game to try again".
+- Bug 5: The difficulty levels for "Normal" and "Hard" do not work. While the Hard mode has the fewest attempts, the range (1 to 50) is smaller. The ideal difficulty levels should be: Easy (1-20, 8 attempts), Normal (1-50, 6 attempts), Hard (1-100, 5 attempts).
 
 ## 2. How did you use AI as a teammate?
 
