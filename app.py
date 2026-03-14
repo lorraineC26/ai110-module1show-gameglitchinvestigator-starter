@@ -1,18 +1,6 @@
 import random
 import streamlit as st
-from logic_utils import check_guess, parse_guess
-
-
-def get_range_for_difficulty(difficulty: str):
-    # FIX: decrease the range for Normal and increase for Hard.
-    # The new ranges are suggested by Gemini based on diff levels
-    if difficulty == "Easy":
-        return 1, 20
-    if difficulty == "Normal":
-        return 1, 50
-    if difficulty == "Hard":
-        return 1, 100
-    return 1, 50
+from logic_utils import check_guess, parse_guess, get_range_for_difficulty
 
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
