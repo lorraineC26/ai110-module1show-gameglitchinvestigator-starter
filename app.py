@@ -1,15 +1,16 @@
 import random
 import streamlit as st
 
+
 def get_range_for_difficulty(difficulty: str):
-    # FIXME: Logic breaks here
+    # FIX: decrease the range for Normal and increase for Hard. The new ranges are suggested by Gemini based on diff levels
     if difficulty == "Easy":
         return 1, 20
     if difficulty == "Normal":
-        return 1, 100
-    if difficulty == "Hard":
         return 1, 50
-    return 1, 100
+    if difficulty == "Hard":
+        return 1, 100
+    return 1, 50
 
 
 def parse_guess(raw: str):
@@ -35,18 +36,18 @@ def check_guess(guess, secret):
         return "Win", "🎉 Correct!"
 
     try:
-        # FIXME: Logic breaks here
+        # FIX: Switched Go Lower and Higher using Copilot to locate the place
         if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
+            return "Too High", "📉 Go LOWER!"
         else:
-            return "Too Low", "📉 Go LOWER!"
+            return "Too Low", "📈 Go HIGHER!"
     except TypeError:
         g = str(guess)
         if g == secret:
             return "Win", "🎉 Correct!"
         if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
+            return "Too High", "📉 Go LOWER!"
+        return "Too Low", "📈 Go HIGHER!"
 
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
@@ -66,6 +67,7 @@ def update_score(current_score: int, outcome: str, attempt_number: int):
 
     return current_score
 
+
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
 
 st.title("🎮 Game Glitch Investigator")
@@ -79,10 +81,10 @@ difficulty = st.sidebar.selectbox(
     index=1,
 )
 
-# FIXME: Logic breaks here
+# FIX: increase the attempts for Easy, decrease for Normal. The attempts num are suggested by Gemini based on diff levels
 attempt_limit_map = {
-    "Easy": 6,
-    "Normal": 8,
+    "Easy": 8,
+    "Normal": 6,
     "Hard": 5,
 }
 attempt_limit = attempt_limit_map[difficulty]
@@ -95,8 +97,9 @@ st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
+# FIX: change the attempt from 1 to 0 by asking claude code how to make the initial attempt match with the actual
 if "attempts" not in st.session_state:
-    st.session_state.attempts = 1
+    st.session_state.attempts = 0
 
 if "score" not in st.session_state:
     st.session_state.score = 0
@@ -111,7 +114,6 @@ st.subheader("Make a guess")
 
 st.info(
     f"Guess a number between 1 and 100. "
-    # FIXME: Logic breaks here
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
 )
 
@@ -191,6 +193,9 @@ if submit:
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
+    # FIX: force the message about "Attempts left" rerun after the state is updated 
+    # --> all displays reflect the updated values.
+    st.rerun()
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
