@@ -28,6 +28,8 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - **Correct AI suggestion:** I asked Claude Code to help me fix the issue with attempts not updating correctly (Bug 3). It suggested that the issue might be with the submit button and Streamlit state management. The info message displays before the submit handler runs, so it does not reflect the updated attempts. I verified the result by implementing the suggested fix and testing the game multiple times, confirming that the attempts now update correctly after each submission.
 - **Misleading AI suggestion:** I asked Claude Code to refactor the `check_guess` function into `logic_utils.py`and ensure the logic is correct. It suggested to remove the `try-except` block that handles non-integer inputs, which is necessary to prevent crashing when input is not a valid integer. I verified the issue by inputting strings like "ppp". There were no error messages, so users would just be trapped in a loop without feedback. I had to re-add the try-except block to handle invalid inputs properly.
 
+---
+
 ## 3. Debugging and testing your fixes
 
 - How did you decide whether a bug was really fixed?
